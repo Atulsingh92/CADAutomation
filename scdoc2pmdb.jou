@@ -1,0 +1,4 @@
+/file/set-tui-version "19.4"
+/file/import/cad-options/save-PMDB? yes 
+/file/import/cad-geometry yes "C:/Local/SW-tests/analysis/0/0.scdoc" mm cad-faceting no 
+exit
