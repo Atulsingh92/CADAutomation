@@ -17,3 +17,7 @@ https://southampton.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=ab1cf5cd-b477-
    - pipe_n_plates.sldprt
    - NamedSelections_in_SCDM.py
    - Folders_copy_files_set_EqnMgr.py (obsolete)
+
+3. Case3
+   - 4pipes_i2.py
+   - 4pipes_i2.SLDPRT
