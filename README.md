@@ -20,4 +20,5 @@ https://southampton.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=ab1cf5cd-b477-
 
 3. Case3
    - 4pipes_i2.py
+   - 4pipes_i2_spline.py
    - 4pipes_i2.SLDPRT
