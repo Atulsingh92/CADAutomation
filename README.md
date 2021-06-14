@@ -10,6 +10,7 @@ https://southampton.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=ab1cf5cd-b477-
    - sld2pm.jou
    - sldprt2pmdb.sh
    - sldprt2scdoc.py
+   - Pymoo-test.py
 
 2. Case2
    - manifolds_n_2pipes.sldprt
