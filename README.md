@@ -23,3 +23,4 @@ https://southampton.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=ab1cf5cd-b477-
    - 4pipes_i2.py
    - 4pipes_i2_spline.py
    - 4pipes_i2.SLDPRT
+   - Spline_for_4pipes_manifold.py
