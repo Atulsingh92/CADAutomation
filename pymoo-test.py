@@ -156,3 +156,12 @@ with Video(File("scratch.mp4")) as vid:
             Scatter(ax=ax2).add(entry.pop.get("F")).do()
             vid.record(fig=fig)
             
+            
+ # Parallel chart plot
+plot3 = PCP(title=("Obejctive functions", {'pad': 30}),
+           n_ticks=5,
+           #legend=(True, {'loc': "upper left"}),
+           labels=["Reynolds number", "e/D", "p/D"]).add(entry.pop.get("X")).do()
+plot3.set_axis_style(color="grey", alpha=1)
+plot3.add(dspace, color="grey", alpha=0.3)
+plot3.show()
