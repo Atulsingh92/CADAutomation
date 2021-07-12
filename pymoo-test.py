@@ -11,6 +11,10 @@ Subject to
 """
 
 
+import numpy as np
+import math as m
+import matplotlib.pyplot as plt
+
 import autograd.numpy as anp
 from pymoo.model.problem import Problem
 from pymoo.algorithms.nsga2 import NSGA2
@@ -19,11 +23,16 @@ from pymoo.optimize import minimize
 from pymoo.util.misc import stack
 from pymoo.visualization.scatter import Scatter
 from pymoo.factory import get_visualization
-import matplotlib.pyplot as plt
-from pymoo.performance_indicator.hv import Hypervolume
-import numpy as np
-import math as m
 
+from pymoo.performance_indicator.hv import Hypervolume
+
+from pymoo.factory import get_problem, get_reference_directions
+from pymoo.visualization.pcp import PCP
+from pymoo.util.display import MultiObjectiveDisplay
+from pyrecorder.video import Video
+from pyrecorder.recorders.file import File
+
+#ref_dirs = get_reference_directions("das-dennis", 3, n_partitions=2)
 
 class MyProb(Problem):
     
@@ -51,6 +60,18 @@ class MyProb(Problem):
         #out["G"] = anp.column_stack([0,0])    
 
 
+
+
+class MyDisplay(MultiObjectiveDisplay):
+    def _do(self,problem, evaluator, algorithm):
+        super()._do(problem,evaluator,algorithm)
+        X = algorithm.opt.X
+        self.output.append("x0", X[0])
+        self.output.append("x1", X[1])
+        self.output.append("x2", X[2])
+        
+        
+        
 problem=MyProb()
 
 algorithm = NSGA2(
@@ -119,4 +140,19 @@ plot.add(res.F, label="ND Solutions") # res.F are objective space vlaues
 plot.add(res.history[0].pop.get("F"), label="DOE")
 plot.add(pf, plot_type="line", color="black", alpha=0.7)
 plot.show()
-          
+
+
+#video 
+
+
+        
+        
+    
+with Video(File("scratch.mp4")) as vid:
+    for entry in res.history:
+        if entry.n_gen%5:
+            fig,(ax1,ax2) = plt.subplots(2, figsize=(8,4))
+            PCP(ax=ax1).add(entry.pop.get("X")).do()
+            Scatter(ax=ax2).add(entry.pop.get("F")).do()
+            vid.record(fig=fig)
+            
