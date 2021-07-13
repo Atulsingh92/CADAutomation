@@ -26,7 +26,7 @@ from pymoo.factory import get_visualization
 
 from pymoo.performance_indicator.hv import Hypervolume
 
-from pymoo.factory import get_problem, get_reference_directions
+from pymoo.factory import get_problem, get_reference_directions, get_decomposition
 from pymoo.visualization.pcp import PCP
 from pymoo.util.display import MultiObjectiveDisplay
 from pyrecorder.video import Video
@@ -61,7 +61,6 @@ class MyProb(Problem):
 
 
 
-
 class MyDisplay(MultiObjectiveDisplay):
     def _do(self,problem, evaluator, algorithm):
         super()._do(problem,evaluator,algorithm)
@@ -86,15 +85,15 @@ algorithm = NSGA2(
 
 res = minimize(MyProb(), 
                algorithm, 
-               ("n_gen", 500), 
+               ("n_gen", 300), 
                seed =1, 
                pf = problem.pareto_front(use_cache=False),
                save_history=True,
                verbose= True)
 
 
+#Scatter plot
 Scatter().add(res.F).show()
-
 dspace = res.pop.get("X")
 reynolds = dspace[:,0]
 pitch= dspace[:,1]
@@ -135,33 +134,64 @@ pf = problem.pareto_front(use_cache=False, flatten=False)
 #plot.show()
 
 # Objective Space
-plot = Scatter(title = "Objective Space", legend=True)
-plot.add(res.F, label="ND Solutions") # res.F are objective space vlaues
-plot.add(res.history[0].pop.get("F"), label="DOE")
-plot.add(pf, plot_type="line", color="black", alpha=0.7)
-plot.show()
+plot2 = Scatter(title = "Objective Space", legend=True, tight_layout=True)
+plot2.add(res.F, label="Pareto front", alpha=0.5) # res.F are objective space vlaues
+plot2.add(res.history[0].pop.get("F"), label="Dominated solutions", alpha=0.5)
+plot2.add(res.F[Imin], color="red", s=30, label="max -Nu, min ff")
+plot2.add(res.F[Imax], color="black", s=30, label="min -Nu, max ff")
+#plot2.add(pf, plot_type="line", color="black", alpha=0.7)
+plot2.show()
 
 
 #video 
-
-
-        
-        
-    
+# The below should be edited with and without .add(entry.pop.get("X").do())
+"""
 with Video(File("scratch.mp4")) as vid:
     for entry in res.history:
         if entry.n_gen%5:
             fig,(ax1,ax2) = plt.subplots(2, figsize=(8,4))
-            PCP(ax=ax1).add(entry.pop.get("X")).do()
-            Scatter(ax=ax2).add(entry.pop.get("F")).do()
+            PCP(ax=ax1,n_ticks=5,
+            #legend=(True, {'loc': "upper left"}),
+            labels=["Reynolds number", "e/D", "p/D"]).add(entry.pop.get("X")).do()
+            Scatter(ax=ax2).add(entry.pop.get("F"), color='blue').do()
+            #Scatter(ax=ax2).add(res.history[0].pop.get("F"), color='red').do()
             vid.record(fig=fig)
-            
-            
- # Parallel chart plot
-plot3 = PCP(title=("Obejctive functions", {'pad': 30}),
-           n_ticks=5,
-           #legend=(True, {'loc': "upper left"}),
-           labels=["Reynolds number", "e/D", "p/D"]).add(entry.pop.get("X")).do()
-plot3.set_axis_style(color="grey", alpha=1)
+"""
+
+## Best solution.
+weights = [0.5,0.5]
+Imin =  get_decomposition("asf").do(res.F, weights).argmin()
+Imax =  get_decomposition("asf").do(res.F, weights).argmax()
+plot=Scatter(figsize=(8,4), legend=True, tight_layout=True)
+plot.add(res.F, color="grey", alpha=0.3, s=30)
+plot.add(res.F[Imin], color="#ffaa00ff", s=30, label="max -Nu, min ff")
+plot.add(res.F[Imax], color="black", s=30, label="min -Nu, max ff")
+plot.do()
+#plot.apply(lambda ax: ax.arrow(0, 0, 0.5, 0.5, color='black',
+#                               head_width=0.01, head_length=0.01, alpha=0.4))
+plot.show()
+
+
+
+# Parallel chart plot
+plot3 = PCP(show_bounds=False, n_ticks=5,labels="",
+           legend=(True, {'loc': "upper left"}),
+           tight_layout=True, figsize=(8,4)) #.add(entry.pop.get("X")).do()
 plot3.add(dspace, color="grey", alpha=0.3)
+plot3.add(res.X[Imin], color="#ffaa00ff", linewidth=3, label="max -Nu, min ff")
+plot3.add(res.X[Imax], color="black", linewidth=3, label="min -Nu, max ff") ##b700ffff
 plot3.show()
+
+
+"""
+#3D scatter plot
+ps = problem.pareto_set(use_cache=False, flatten=False)
+pf = problem.pareto_front(use_cache=False, flatten=False)
+
+plot4 = Scatter(title = "Design Space", axis_labels="x")
+plot4.add(res.X, s=30, facecolors='blue', edgecolors='r')
+if ps is not None:
+    plot4.add(ps, plot_type="line", color="black", alpha=0.7)
+plot4.do()
+plot4.show()
+"""
