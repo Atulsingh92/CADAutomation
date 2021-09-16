@@ -25,7 +25,7 @@ from pyKriging.krige import kriging
 from pyKriging.samplingplan import samplingplan
 from pyKriging.CrossValidation import Cross_Validation
 from pyKriging.utilities import saveModel
-import mayavi.mlab as mlab
+#import mayavi.mlab as mlab
 
 #Common to pySW
 from pySW import SW
@@ -115,7 +115,8 @@ SW.connectToSW()
 
 SW.openPrt(psutil.os.getcwd()+'\\'+partName);
 
-var = SW.getGlobalVariables(); #example var = {'Dia': 12, 'ExL':12, 'blends':0.5}
+#var = SW.getGlobalVariables(); #example var = {'Dia': 12, 'ExL':12, 'blends':0.5}
+var, units, eqnnumber = SW.getGlobalVars()
 
 variables = [];
 var1 = [];
@@ -163,9 +164,9 @@ for i in range(len(des)):
     psutil.os.mkdir(analysisDir+'\\'+str(i)); # create number of folders insider analysis directory
     for j in range(len(variables)):
         SW.modifyGlobalVar(variables[j], des[i][j],'mm');
-        SW.updatePrt();
+        SW.update();
         
-    SW.saveAssy(analysisDir+'\\'+str(i), str(i), 'SLDPRT');
+    SW.save(analysisDir+'\\'+str(i), str(i), 'SLDPRT');
 
 s.to_csv(psutil.os.getcwd()+'\\parameters.csv')
 
