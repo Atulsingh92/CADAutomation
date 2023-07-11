@@ -3,7 +3,6 @@
 Created on Tue Jul 11 13:19:56 2023
 
 @author: aus1n19
-
 Maximize: f1 = 0.047 * pow( x[:,0], 0.8121) * pow(x[:,1],0.1233) * pow(x[:,2], -0.1585)
 Minimize f2 = f2 = 9.795 * pow( x[:,0], 0.8014) * pow(x[:,1],0.8437) * pow(x[:,2], -0.6462)
 
@@ -12,8 +11,7 @@ Subject to
 2) 0.02 <= height <= 0.08
 3) 1.0 <= pitch <= 2.0
 
-
-for pymoo version 0.5.0
+for version 0.5.0
 """
 
 
@@ -22,27 +20,8 @@ import math as m
 import matplotlib.pyplot as plt
 
 import autograd.numpy as anp
-# from pymoo.core.problem import Problem
-# from pymoo.algorithms.moo import nsga2 as NSGA2
-# from pymoo.core.sampling import Sampling as sampling
-# from pymoo.model.problem import Problem
-# from pymoo import *
-# from pymoo.model.problem import Problem
-
-# from pymoo.algorithms.nsga2 import NSGA2
-# from pymoo.factory import get_sampling, get_crossover, get_mutation
-# from pymoo.optimize import minimize
-# from pymoo.util.misc import stack
 from pymoo.visualization.scatter import Scatter
-# from pymoo.factory import get_visualization
-
-# from pymoo.performance_indicator.hv import Hypervolume
-
-# from pymoo.factory import get_problem, get_reference_directions, get_decomposition
 from pymoo.visualization.pcp import PCP
-# from pymoo.util.display import MultiObjectiveDisplay
-# from pyrecorder.video import Video
-# from pyrecorder.recorders.file import File
 
 
 from pymoo.core.problem import ElementwiseProblem
@@ -75,16 +54,6 @@ class MyProb(ElementwiseProblem):
 
 
 problem = MyProb()
-
-#ref_dirs = get_reference_directions("das-dennis", 3, n_partitions=2)
-
-# class MyDisplay(MultiObjectiveDisplay):
-#     def _do(self,problem, evaluator, algorithm):
-#         super()._do(problem,evaluator,algorithm)
-#         X = algorithm.opt.X
-#         self.output.append("x0", X[0])
-#         self.output.append("x1", X[1])
-#         self.output.append("x2", X[2])
 
 algorithm = NSGA2(
         pop_size = 100,
@@ -155,24 +124,6 @@ plt.xlabel("Function Evaluations")
 plt.ylabel("Hypervolume")
 plt.show()
 
-
-# metric = Hypervolume(ref_point=np.array([1.0, 1.0]))
-
-# # collect the population in each generation
-# pop_each_gen = [a.pop for a in res.history]
-
-# # receive the population in each generation
-# obj_and_feasible_each_gen = [pop[pop.get("feasible")[:,0]].get("F") for pop in pop_each_gen]
-
-# # calculate for each generation the HV metric
-# hv = [metric.calc(f) for f in obj_and_feasible_each_gen]
-
-# # visualze the convergence curve
-# plt.plot(np.arange(len(hv)), hv, '-o')
-# plt.title("Convergence")
-# plt.xlabel("Generation")
-# plt.ylabel("Hypervolume")
-# plt.show()
 
 ps = problem.pareto_set(use_cache=False, flatten=False)
 pf = problem.pareto_front(use_cache=False, flatten=False)
