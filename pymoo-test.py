@@ -8,6 +8,8 @@ Subject to
 2) 0.02 <= height <= 0.08
 3) 1.0 <= pitch <= 2.0
 
+This is valid for pymoo==0.4.2
+
 """
 
 
